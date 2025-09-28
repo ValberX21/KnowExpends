@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="KnowExpends.Mobile.AddExpensePage"
+             Title="Novo gasto"
+             BackgroundColor="DarkGreen">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="25">
+            <Label Text="Novo gasto"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   Margin="0,20,0,40" />
+            
+            <!-- Title Field -->
+            <Frame BackgroundColor="White" 
+                   CornerRadius="12" 
+                   HasShadow="True" 
+                   Padding="20">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Título" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           TextColor="Black" />
+                    <Entry x:Name="TitleEntry" 
+                           Placeholder="Digite o título do gasto"
+                           FontSize="16"
+                           TextColor="Black"
+                           BackgroundColor="Transparent"
+                           HeightRequest="50" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Price Field -->
+            <Frame BackgroundColor="White" 
+                   CornerRadius="12" 
+                   HasShadow="True" 
+                   Padding="20">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Valor" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           TextColor="Black" />
+                    <Entry x:Name="PriceEntry" 
+                           Placeholder="0,00" 
+                           Keyboard="Numeric"
+                           FontSize="16"
+                           TextColor="Black"
+                           BackgroundColor="Transparent"
+                           HeightRequest="50" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Category Field -->
+            <Frame BackgroundColor="White" 
+                   CornerRadius="12" 
+                   HasShadow="True" 
+                   Padding="20">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Categoria" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           TextColor="Black" />
+                    <Picker x:Name="CategoryPicker" 
+                            Title="Selecione uma categoria"
+                            FontSize="16"
+                            TextColor="Black"
+                            BackgroundColor="LightGray"
+                            HeightRequest="70" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Description Field -->
+            <Frame BackgroundColor="White" 
+                   CornerRadius="12" 
+                   HasShadow="True" 
+                   Padding="20">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Descrição" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           TextColor="Black" />
+                    <Editor x:Name="DescriptionEditor" 
+                            Placeholder="Digite uma descrição (opcional)" 
+                            HeightRequest="120"
+                            FontSize="16"
+                            TextColor="Black"
+                            BackgroundColor="Transparent" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Save Button -->
+            <Border Stroke="DarkGreen"
+                    StrokeThickness="3"                      
+                    BackgroundColor="Black"
+                    Margin="0,30,0,0">
+                <Button x:Name="SaveButton"
+                        Text="Salvar Gasto"
+                        BackgroundColor="Green"
+                        BorderColor="Black"
+                        TextColor="White"
+                        FontSize="20"
+                        FontAttributes="Bold"
+                        CornerRadius="12"
+                        HeightRequest="60"
+                        Clicked="OnSaveButtonClicked" />
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

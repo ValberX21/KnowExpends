@@ -9,6 +9,10 @@ namespace KnowExpends.Mobile.Enums
         Saúde,
         Educação,
         Lazer,
+        UBER,
+        Higiene,
+        PassagemBus,
+        ContasParents,
         Outros
     }
 }

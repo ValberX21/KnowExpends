@@ -11,12 +11,18 @@ namespace KnowExpends.Mobile
         private DatabaseService _databaseService;
         private ExpenseCategory _selectedCategory;
         private List<Expense> _allExpenses;
+        private DateTime? _startDate;
+        private DateTime? _endDate;
+        private bool _isCustomPeriod;
 
-        public CategoryExpensesPage(ExpenseCategory category)
+        public CategoryExpensesPage(ExpenseCategory category, DateTime? startDate = null, DateTime? endDate = null, bool isCustomPeriod = false)
         {
             InitializeComponent();
             _databaseService = new DatabaseService();
             _selectedCategory = category;
+            _startDate = startDate;
+            _endDate = endDate;
+            _isCustomPeriod = isCustomPeriod;
             ExpenseGroups = new ObservableCollection<ExpenseGroup>();
             _allExpenses = new List<Expense>();
             BindingContext = this;
@@ -50,6 +56,17 @@ namespace KnowExpends.Mobile
             var filteredExpenses = _allExpenses
                 .Where(e => e.Category == _selectedCategory)
                 .ToList();
+
+            // Apply date filter if provided
+            if (_startDate.HasValue && _endDate.HasValue)
+            {
+                var start = _startDate.Value.Date;
+                var end = _endDate.Value.Date.AddDays(1).AddTicks(-1);
+                
+                filteredExpenses = filteredExpenses
+                    .Where(e => e.CreatedDate >= start && e.CreatedDate <= end)
+                    .ToList();
+            }
             
             // Group expenses by date
             var groupedExpenses = filteredExpenses
@@ -85,11 +102,32 @@ namespace KnowExpends.Mobile
         private void UpdateHeader()
         {
             var categoryExpenses = _allExpenses.Where(e => e.Category == _selectedCategory).ToList();
+            
+            // Apply date filter if provided
+            if (_startDate.HasValue && _endDate.HasValue)
+            {
+                var start = _startDate.Value.Date;
+                var end = _endDate.Value.Date.AddDays(1).AddTicks(-1);
+                
+                categoryExpenses = categoryExpenses
+                    .Where(e => e.CreatedDate >= start && e.CreatedDate <= end)
+                    .ToList();
+            }
+            
             var totalAmount = categoryExpenses.Sum(e => e.Price);
             var totalCount = categoryExpenses.Count;
 
             CategoryTitleLabel.Text = $"💰 {_selectedCategory}";
-            CategorySummaryLabel.Text = $"{totalCount} gastos • Total: ${totalAmount:F2}";
+            
+            if (_startDate.HasValue && _endDate.HasValue)
+            {
+                CategorySummaryLabel.Text = $"{totalCount} gastos • Total: ${totalAmount:F2} • Período: {_startDate.Value:dd/MM/yyyy} - {_endDate.Value:dd/MM/yyyy}";
+            }
+            else
+            {
+                CategorySummaryLabel.Text = $"{totalCount} gastos • Total: ${totalAmount:F2}";
+            }
         }
     }
 }
+

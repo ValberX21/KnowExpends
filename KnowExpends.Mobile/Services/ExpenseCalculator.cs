@@ -53,6 +53,67 @@ namespace KnowExpends.Mobile.Services
             };
         }
 
+        public static MonthlySummary CalculateMonthlySummary(List<Expense> allExpenses, int year, int month)
+        {
+            var startDate = new DateTime(year, month, 1);
+            var endDate = startDate.AddMonths(1).AddDays(-1).AddDays(1).AddTicks(-1); // End of the last day of month
+
+            var monthlyExpenses = allExpenses
+                .Where(e => e.CreatedDate >= startDate && e.CreatedDate <= endDate)
+                .ToList();
+
+            var categorySummaries = monthlyExpenses
+                .GroupBy(e => e.Category)
+                .Select(g => new CategorySummary
+                {
+                    Category = g.Key,
+                    Total = g.Sum(e => e.Price),
+                    Count = g.Count()
+                })
+                .OrderByDescending(c => c.Total)
+                .ToList();
+
+            return new MonthlySummary
+            {
+                CategorySummaries = categorySummaries,
+                TotalAmount = monthlyExpenses.Sum(e => e.Price),
+                TotalExpenses = monthlyExpenses.Count,
+                StartDate = startDate,
+                EndDate = startDate.AddMonths(1).AddDays(-1)
+            };
+        }
+
+        public static MonthlySummary CalculateCustomPeriodSummary(List<Expense> allExpenses, DateTime startDate, DateTime endDate)
+        {
+            // Ensure we're working with date-only comparisons and normalize to start/end of day
+            var start = startDate.Date;
+            var end = endDate.Date.AddDays(1).AddTicks(-1); // End of the selected day
+
+            var periodExpenses = allExpenses
+                .Where(e => e.CreatedDate >= start && e.CreatedDate <= end)
+                .ToList();
+
+            var categorySummaries = periodExpenses
+                .GroupBy(e => e.Category)
+                .Select(g => new CategorySummary
+                {
+                    Category = g.Key,
+                    Total = g.Sum(e => e.Price),
+                    Count = g.Count()
+                })
+                .OrderByDescending(c => c.Total)
+                .ToList();
+
+            return new MonthlySummary
+            {
+                CategorySummaries = categorySummaries,
+                TotalAmount = periodExpenses.Sum(e => e.Price),
+                TotalExpenses = periodExpenses.Count,
+                StartDate = start,
+                EndDate = endDate.Date
+            };
+        }
+
         public static string FormatSummaryText(MonthlySummary summary)
         {
             var text = $"📊 RESUMO DOS ÚLTIMOS 30 DIAS\n";
@@ -82,6 +143,8 @@ namespace KnowExpends.Mobile.Services
         }
     }
 }
+
+
 
 
 
